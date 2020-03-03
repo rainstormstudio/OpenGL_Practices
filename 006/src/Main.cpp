@@ -9,56 +9,22 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Window.h"
 #include "Mesh.h"
 #include "Shader.h"
 
 // Window dimensions
-const GLint WIDTH = 800, HEIGHT = 600;
 const float toRadians = 3.1415926f / 180.0f;
 
+Window mainWindow;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 
-bool direction = true;
-float triOffset = 0.0f;
-float triMaxoffset = 0.7f;
-float triIncrement = 0.0001f;
-
-float curAngle = 0.0f;
-bool sizeDirection = true;
-float curSize = 0.4f;
-float maxSize = 0.8f;
-float minSize = 0.1f;
-
 // Vertex Shader
-static const char *vShader = "                                               \n\
-#version 330                                                                 \n\
-                                                                             \n\
-layout (location = 0) in vec3 pos;                                           \n\
-                                                                             \n\
-out vec4 vColor;                                                             \n\
-                                                                             \n\ 
-uniform mat4 model;                                                          \n\
-uniform mat4 projection;                                                     \n\
-                                                                             \n\
-void main() {                                                                \n\
-  gl_Position = projection * model * vec4(pos, 1.0f);                        \n\
-  vColor = vec4(clamp(pos, 0.0f, 1.0f), 1.0f);                               \n\
-}                                                                            \n\
-";
+static const char *vShader = "shaders/basics.vsh";
 
 // Fragment Shader
-static const char *fShader = "                         \n\
-#version 330                                           \n\
-                                                       \n\
-in vec4 vColor;                                        \n\
-                                                       \n\
-out vec4 color;                                        \n\
-                                                       \n\
-void main() {                                          \n\
-  color = vColor;                                      \n\
-}                                                      \n\
-";
+static const char *fShader = "shaders/basics.fsh";
 
 void createObjects() {
   unsigned int indices[] = {
@@ -85,56 +51,14 @@ void createObjects() {
 
 void createShaders() {
   Shader *shader1 = new Shader();
-  shader1->createFromString(vShader, fShader);
+  shader1->createFromFiles(vShader, fShader);
   shaderList.push_back(*shader1);
 }
 
 int main(int argc, char *argv[])
 {
-  // Initialize GLFW
-  if (!glfwInit()) {
-    printf("GLFW initialization failed!");
-    glfwTerminate();
-    return 1;
-  }
-
-  // setup GLFW window properties
-  // OpenGL version
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  // Core profile = No Backwards compatability
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  // Allow forward compatability
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-  GLFWwindow *mainWindow = glfwCreateWindow(WIDTH, HEIGHT, "Test Window", NULL, NULL);
-  if (!mainWindow) {
-    printf("GLFW window creation failed!");
-    glfwTerminate();
-    return 1;
-  }
-
-  // Get Buffer size information
-  int bufferWidth, bufferHeight;
-  glfwGetFramebufferSize(mainWindow, &bufferWidth, &bufferHeight);
-
-  // Set context for GLEW to use
-  glfwMakeContextCurrent(mainWindow);
-
-  // Allow modern extension features
-  glewExperimental = GL_TRUE;
-
-  if (glewInit() != GLEW_OK) {
-    printf("GLEW initialization failed!");
-    glfwDestroyWindow(mainWindow);
-    glfwTerminate();
-    return 1;
-  }
-
-  glEnable(GL_DEPTH_TEST);
-
-  // Setup Viewport size
-  glViewport(0, 0, bufferWidth, bufferHeight);
+  mainWindow = Window(800, 600);
+  mainWindow.initialize();
 
   createObjects();
   createShaders();
@@ -142,36 +66,14 @@ int main(int argc, char *argv[])
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
   glm::mat4 projection = glm::perspective(45.0f,
-					  (GLfloat)(bufferWidth) / (GLfloat)(bufferHeight),
+					  mainWindow.getBufferWidth() /
+					  mainWindow.getBufferHeight(),
 					  0.1f, 100.0f);
 
   // loop until window closed
-  while (!glfwWindowShouldClose(mainWindow)) {
+  while (!mainWindow.getShouldClose()) {
     // Get and handle user input events
     glfwPollEvents();
-
-    if (direction) {
-      triOffset += triIncrement;
-    } else {
-      triOffset -= triIncrement;
-    }
-    if (abs(triOffset) >= triMaxoffset) {
-      direction = !direction;
-    }
-
-    curAngle += 0.01f;
-    if (curAngle >= 360) {
-      curAngle -= 360;
-    }
-
-    if (sizeDirection) {
-      curSize += 0.0001f;
-    } else {
-      curSize -= 0.0001f;
-    }
-    if (curSize >= maxSize || curSize <= minSize) {
-      sizeDirection = !sizeDirection;
-    }
 
     // clear window
     glClearColor(0.0f, 0.6f, 0.8f, 1.0f);
@@ -184,7 +86,7 @@ int main(int argc, char *argv[])
     glm::mat4 model(1.0);
 
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-    model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
@@ -192,14 +94,14 @@ int main(int argc, char *argv[])
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
-    model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     meshList[1]->renderMesh();
     
     glUseProgram(0);
 
-    glfwSwapBuffers(mainWindow);
+    mainWindow.swapBuffers();
   }
   
   return 0;
