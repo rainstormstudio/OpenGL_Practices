@@ -50,6 +50,7 @@ int Window::initialize() {
 
   // Handle key and mouse input
   createCallbacks();
+  glfwSetInputMode(mainWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
   // Allow modern extension features
   glewExperimental = GL_TRUE;
@@ -71,6 +72,19 @@ int Window::initialize() {
 
 void Window::createCallbacks() {
   glfwSetKeyCallback(mainWindow, handleKeys);
+  glfwSetCursorPosCallback(mainWindow, handleMouse);
+}
+
+GLfloat Window::getXchange() {
+  GLfloat theChange = xChange;
+  xChange = 0.0f;
+  return theChange;
+}
+
+GLfloat Window::getYchange() {
+  GLfloat theChange = yChange;
+  yChange = 0.0f;
+  return theChange;
 }
 
 void Window::handleKeys(GLFWwindow *window, int key, int code, int action, int mode) {
@@ -87,6 +101,24 @@ void Window::handleKeys(GLFWwindow *window, int key, int code, int action, int m
       theWindow->keys[key] = false;
     }
   }
+}
+
+void Window::handleMouse(GLFWwindow *window, double posX, double posY) {
+  Window *theWindow = static_cast<Window*>(glfwGetWindowUserPointer(window));
+
+  if (theWindow->mouseFirstMoved) {
+    theWindow->lastX = posX;
+    theWindow->lastY = posY;
+    theWindow->mouseFirstMoved = false;
+  }
+
+  theWindow->xChange = posX - theWindow->lastX;
+  theWindow->yChange = -(posY - theWindow->lastY);
+
+  theWindow->lastX = posX;
+  theWindow->lastY = posY;
+
+  // printf("(x, y) = (%.6f, %.6f)\n", theWindow->xChange, theWindow->yChange);
 }
 
 Window::~Window() {
