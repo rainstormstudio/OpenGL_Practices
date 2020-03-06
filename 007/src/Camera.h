@@ -9,7 +9,7 @@ public:
   Camera();
   Camera(glm::vec3 initPosition, glm::vec3 initUp, GLfloat initYaw, GLfloat initPitch, GLfloat initMoveSpeed, GLfloat initTurnSpeed);
 
-  void keyControl(bool *keys);
+  void keyControl(bool *keys, GLfloat deltaTime);
 
   glm::mat4 calculateView();
   

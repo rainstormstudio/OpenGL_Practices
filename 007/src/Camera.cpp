@@ -17,18 +17,18 @@ Camera::Camera(glm::vec3 initPosition, glm::vec3 initUp, GLfloat initYaw, GLfloa
   update();
 }
 
-void Camera::keyControl(bool *keys) {
+void Camera::keyControl(bool *keys, GLfloat deltaTime) {
   if (keys[GLFW_KEY_W]) {
-    position += front * moveSpeed;
+    position += front * moveSpeed * deltaTime;
   }
   if (keys[GLFW_KEY_S]) {
-    position -= front * moveSpeed;
+    position -= front * moveSpeed * deltaTime;
   }
   if (keys[GLFW_KEY_A]) {
-    position -= right * moveSpeed;
+    position -= right * moveSpeed * deltaTime;
   }
   if (keys[GLFW_KEY_D]) {
-    position += right * moveSpeed;
+    position += right * moveSpeed * deltaTime;
   }
 }
 
