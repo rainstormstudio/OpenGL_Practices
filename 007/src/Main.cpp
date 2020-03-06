@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   createObjects();
   createShaders();
 
-  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 1.0f);
+  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.07f);
 
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
