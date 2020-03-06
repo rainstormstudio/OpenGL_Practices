@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     glfwPollEvents();
 
     camera.keyControl(mainWindow.getKeys(), deltaTime);
+    camera.mouseControl(mainWindow.getXchange(), mainWindow.getYchange());
 
     // clear window
     glClearColor(0.0f, 0.6f, 0.8f, 1.0f);
