@@ -44,6 +44,30 @@ void createObjects() {
 			1.0f, -1.0f, 0.0f,
 			0.0f, 1.0f, 0.0f
   };
+  unsigned int cubeIndices[] = {
+				0, 1, 2,
+				2, 3, 0,
+				1, 5, 6,
+				6, 2, 1,
+				7, 6, 5,
+				5, 4, 7,
+				4, 0, 3,
+				3, 7, 4,
+				4, 5, 1,
+				1, 0, 4,
+				3, 2, 6,
+				6, 7, 3			
+  };
+  GLfloat cubeVertices[] = {
+			    -1.0, -1.0,  1.0,
+			    1.0, -1.0,  1.0,
+			    1.0,  1.0,  1.0,
+			    -1.0,  1.0,  1.0,
+			    -1.0, -1.0, -1.0,
+			    1.0, -1.0, -1.0,
+			    1.0,  1.0, -1.0,
+			    -1.0,  1.0, -1.0
+  };
 
   Mesh *obj1 = new Mesh();
   obj1->createMesh(vertices, indices, 12, 12);
@@ -52,6 +76,10 @@ void createObjects() {
   Mesh *obj2 = new Mesh();
   obj2->createMesh(vertices, indices, 12, 12);
   meshList.push_back(obj2);
+
+  Mesh *cube = new Mesh();
+  cube->createMesh(cubeVertices, cubeIndices, 24, 36);
+  meshList.push_back(cube);
 }
 
 void createShaders() {
@@ -107,14 +135,19 @@ int main(int argc, char *argv[])
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
-    meshList[0]->renderMesh();
+    // meshList[0]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    meshList[1]->renderMesh();
+    // meshList[1]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    meshList[2]->renderMesh();
     
     glUseProgram(0);
 
