@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "constants.h"
 #include "Window.h"
 #include "Mesh.h"
 #include "Shader.h"
@@ -24,6 +25,7 @@ Camera camera;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
+GLfloat lastFrameTime = 0.0f;
 
 // Vertex Shader
 static const char *vShader = "shaders/basics.vsh";
@@ -90,7 +92,7 @@ void createShaders() {
 
 int main(int argc, char *argv[])
 {
-  mainWindow = Window(800, 600);
+  mainWindow = Window(SCREEN_WIDTH, SCREEN_HEIGHT);
   mainWindow.initialize();
 
   createObjects();
@@ -110,7 +112,6 @@ int main(int argc, char *argv[])
   while (!mainWindow.getShouldClose()) {
     GLfloat currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
     
     // Get and handle user input events
     glfwPollEvents();
@@ -151,7 +152,11 @@ int main(int argc, char *argv[])
     
     glUseProgram(0);
 
-    mainWindow.swapBuffers();
+    if (currentTime - lastFrameTime >= 1.0f / FPS) {
+      mainWindow.swapBuffers();
+      lastFrameTime = currentTime;
+    }
+    lastTime = currentTime;
   }
   
   return 0;
