@@ -55,28 +55,38 @@ void createObjects() {
   };
   unsigned int cubeIndices[] = {
 				0, 1, 2,
-				2, 3, 0,
-				1, 5, 6,
-				6, 2, 1,
-				7, 6, 5,
-				5, 4, 7,
-				4, 0, 3,
-				3, 7, 4,
-				4, 5, 1,
-				1, 0, 4,
+				2, 1, 3,
 				3, 2, 6,
-				6, 7, 3			
+				6, 3, 7,
+				7, 6, 5,
+				5, 6, 4,
+				4, 5, 1,
+				1, 4, 0,
+
+				9, 11, 15,
+				15, 9, 13,
+				8, 10, 14,
+				14, 8, 12
   };
   GLfloat cubeVertices[] = {
-			    -1.0, -1.0,  1.0,
-			    1.0, -1.0,  1.0,
-			    1.0,  1.0,  1.0,
-			    -1.0,  1.0,  1.0,
-			    -1.0, -1.0, -1.0,
-			    1.0, -1.0, -1.0,
-			    1.0,  1.0, -1.0,
-			    -1.0,  1.0, -1.0
-  };
+			    -1.0, -1.0,  1.0,    0.0f, 0.0f, 
+			    -1.0, 1.0,  1.0,     0.0f, 1.0f,
+			    1.0,  -1.0,  1.0,    1.0f, 0.0f,
+			    1.0,  1.0,  1.0,     1.0f, 1.0f,
+			    -1.0, -1.0, -1.0,    1.0f, 0.0f,
+			    -1.0, 1.0, -1.0,     1.0f, 1.0f,
+			    1.0,  -1.0, -1.0,    0.0f, 0.0f,
+			    1.0,  1.0, -1.0,     0.0f, 1.0f,
+
+			    -1.0, -1.0,  1.0,    0.0f, 1.0f, 
+			    -1.0, 1.0,  1.0,     0.0f, 0.0f,
+			    1.0,  -1.0,  1.0,    1.0f, 1.0f,
+			    1.0,  1.0,  1.0,     1.0f, 0.0f,
+			    -1.0, -1.0, -1.0,    0.0f, 0.0f,
+			    -1.0, 1.0, -1.0,     0.0f, 1.0f,
+			    1.0,  -1.0, -1.0,    1.0f, 0.0f,
+			    1.0,  1.0, -1.0,     1.0f, 1.0f,
+			    };
 
   Mesh *obj1 = new Mesh();
   obj1->createMesh(vertices, indices, 20, 12);
@@ -87,7 +97,7 @@ void createObjects() {
   meshList.push_back(obj2);
 
   Mesh *cube = new Mesh();
-  cube->createMesh(cubeVertices, cubeIndices, 24, 36);
+  cube->createMesh(cubeVertices, cubeIndices, 80, 36);
   meshList.push_back(cube);
 }
 
@@ -105,7 +115,7 @@ int main(int argc, char *argv[])
   createObjects();
   createShaders();
 
-  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.07f);
+  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
   brickTexture = Texture("textures/brick.png");
   brickTexture.loadTexture();
@@ -162,7 +172,8 @@ int main(int argc, char *argv[])
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    // meshList[2]->renderMesh();
+    brickTexture.useTexture();
+    meshList[2]->renderMesh();
     
     glUseProgram(0);
 
