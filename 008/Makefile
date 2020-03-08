@@ -7,6 +7,16 @@ build:
 	-lGLU \
 	-lGLEW;
 
+test:
+	g++ -w -std=c++14 -Wfatal-errors \
+	-g ./src/*.cpp ./src/*.c \
+	-o game \
+	-lglfw \
+	-lGL \
+	-lGLU \
+	-lGLEW;
+	./game;
+
 clean:
 	rm ./game;
 run:
