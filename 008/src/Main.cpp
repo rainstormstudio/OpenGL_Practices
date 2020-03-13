@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Light.h"
 
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
@@ -28,6 +29,8 @@ Camera camera;
 
 Texture brickTexture;
 Texture clayTexture;
+
+Light mainLight;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -130,10 +133,14 @@ int main(int argc, char *argv[])
   brickTexture.loadTexture();
   clayTexture = Texture("textures/clay.png");
   clayTexture.loadTexture();
+
+  mainLight = Light(1.0f, 1.0f, 1.0f, 1.0f);
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
   GLuint uniformView = 0;
+  GLuint uniformAmbientIntensity = 0;
+  GLuint uniformAmbientColor = 0;
   glm::mat4 projection = glm::perspective(45.0f,
 					  mainWindow.getBufferWidth() /
 					  mainWindow.getBufferHeight(),
@@ -158,6 +165,10 @@ int main(int argc, char *argv[])
     uniformModel = shaderList[0].getModelLocation();
     uniformProjection = shaderList[0].getProjectionLocation();
     uniformView = shaderList[0].getViewLocation();
+    uniformAmbientColor = shaderList[0].getAmbientColorLocation();
+    uniformAmbientIntensity = shaderList[0].getAmbientIntensityLocation();
+
+    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor);
     
     glm::mat4 model(1.0);
 
