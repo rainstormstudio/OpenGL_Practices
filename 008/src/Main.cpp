@@ -95,17 +95,18 @@ void createObjects() {
   unsigned int cubeIndices[] = {
 				0, 1, 2,
 				2, 1, 3,
-				6, 2, 3,
-				6, 3, 7,
-				7, 5, 6,
-				4, 6, 5,
-				4, 5, 1,
-				4, 1, 0,
+				6, 7, 5,
+				6, 5, 4,
 
 				9, 15, 11,
 				15, 9, 13,
 				8, 10, 14,
-				12, 8, 14
+				12, 8, 14,
+
+				20, 17, 16,
+				20, 21, 17,
+				18, 19, 22,
+				22, 19, 23
   };
   GLfloat cubeVertices[] = {
 			    -1.0, -1.0,  1.0,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
@@ -124,9 +125,18 @@ void createObjects() {
 			    -1.0, -1.0, -1.0,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
 			    -1.0, 1.0, -1.0,     0.0f, 1.0f,   0.0f, 0.0f, 0.0f, 
 			    1.0,  -1.0, -1.0,    1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
-			    1.0,  1.0, -1.0,     1.0f, 1.0f,   0.0f, 0.0f, 0.0f
-			    };
-  calcAverageNormals(cubeIndices, 36, cubeVertices, 128, 8, 5);
+			    1.0,  1.0, -1.0,     1.0f, 1.0f,   0.0f, 0.0f, 0.0f,
+			    
+			    -1.0, -1.0,  1.0,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			    -1.0, 1.0,  1.0,     0.0f, 1.0f,   0.0f, 0.0f, 0.0f, 
+			    1.0,  -1.0,  1.0,    1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			    1.0,  1.0,  1.0,     1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 
+			    -1.0, -1.0, -1.0,    1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			    -1.0, 1.0, -1.0,     1.0f, 1.0f,   0.0f, 0.0f, 0.0f, 
+			    1.0,  -1.0, -1.0,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			    1.0,  1.0, -1.0,     0.0f, 1.0f,   0.0f, 0.0f, 0.0f
+  };
+  calcAverageNormals(cubeIndices, 36, cubeVertices, 192, 8, 5);
 
   Mesh *obj1 = new Mesh();
   obj1->createMesh(vertices, indices, 32, 12);
@@ -137,15 +147,15 @@ void createObjects() {
   meshList.push_back(obj2);
   
   Mesh *cube1 = new Mesh();
-  cube1->createMesh(cubeVertices, cubeIndices, 128, 36);
+  cube1->createMesh(cubeVertices, cubeIndices, 192, 36);
   meshList.push_back(cube1);
 
   Mesh *cube2 = new Mesh();
-  cube2->createMesh(cubeVertices, cubeIndices, 128, 36);
+  cube2->createMesh(cubeVertices, cubeIndices, 192, 36);
   meshList.push_back(cube2);
 
   Mesh *cube3 = new Mesh();
-  cube3->createMesh(cubeVertices, cubeIndices, 128, 36);
+  cube3->createMesh(cubeVertices, cubeIndices, 192, 36);
   meshList.push_back(cube3);
   
 }
