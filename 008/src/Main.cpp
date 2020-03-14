@@ -95,17 +95,17 @@ void createObjects() {
   unsigned int cubeIndices[] = {
 				0, 1, 2,
 				2, 1, 3,
-				3, 2, 6,
+				6, 2, 3,
 				6, 3, 7,
-				7, 6, 5,
-				5, 6, 4,
+				7, 5, 6,
+				4, 6, 5,
 				4, 5, 1,
-				1, 4, 0,
+				4, 1, 0,
 
-				9, 11, 15,
+				9, 15, 11,
 				15, 9, 13,
 				8, 10, 14,
-				14, 8, 12
+				12, 8, 14
   };
   GLfloat cubeVertices[] = {
 			    -1.0, -1.0,  1.0,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
@@ -126,6 +126,7 @@ void createObjects() {
 			    1.0,  -1.0, -1.0,    1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
 			    1.0,  1.0, -1.0,     1.0f, 1.0f,   0.0f, 0.0f, 0.0f
 			    };
+  calcAverageNormals(cubeIndices, 36, cubeVertices, 128, 8, 5);
 
   Mesh *obj1 = new Mesh();
   obj1->createMesh(vertices, indices, 32, 12);
