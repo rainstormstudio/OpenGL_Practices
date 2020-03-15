@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
     glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
     brickTexture.useTexture();
-    meshList[0]->renderMesh();
+    // meshList[0]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
@@ -240,7 +240,7 @@ int main(int argc, char *argv[])
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     clayTexture.useTexture();
-    meshList[1]->renderMesh();
+    // meshList[1]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
