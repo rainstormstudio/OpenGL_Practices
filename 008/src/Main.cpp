@@ -32,6 +32,7 @@ Texture brickTexture;
 Texture clayTexture;
 Texture roofTexture;
 Texture concreteTexture;
+Texture steelTexture;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -184,6 +185,8 @@ int main(int argc, char *argv[])
   brickTexture.loadTexture();
   clayTexture = Texture("textures/clay.png");
   clayTexture.loadTexture();
+  steelTexture = Texture("textures/steel.png");
+  steelTexture.loadTexture();
 
   shinyMaterial = Material(1.0f, 32);
   dullMaterial = Material(0.3f, 4);
@@ -276,7 +279,7 @@ int main(int argc, char *argv[])
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(6.0f, 0.0f, -2.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    clayTexture.useTexture();
+    steelTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[4]->renderMesh();
     
