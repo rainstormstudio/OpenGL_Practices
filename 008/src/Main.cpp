@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "Light.h"
+#include "Material.h"
 
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
@@ -31,6 +32,9 @@ Texture brickTexture;
 Texture clayTexture;
 Texture roofTexture;
 Texture concreteTexture;
+
+Material shinyMaterial;
+Material dullMaterial;
 
 Light mainLight;
 
@@ -181,16 +185,22 @@ int main(int argc, char *argv[])
   clayTexture = Texture("textures/clay.png");
   clayTexture.loadTexture();
 
+  shinyMaterial = Material(1.0f, 32);
+  dullMaterial = Material(0.3f, 4);
+
   mainLight = Light(1.0f, 1.0f, 1.0f, 0.2f,
-		    2.0f, -1.0f, -2.0f, 1.0f);
+		    2.0f, -1.0f, -2.0f, 0.3f);
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
   GLuint uniformView = 0;
+  GLuint uniformEyePosition = 0;
   GLuint uniformAmbientIntensity = 0;
   GLuint uniformAmbientColor = 0;
   GLuint uniformDirection = 0;
   GLuint uniformDiffuseIntensity = 0;
+  GLuint uniformSpecularIntensity = 0;
+  GLuint uniformShininess = 0;
   glm::mat4 projection = glm::perspective(45.0f,
 					  mainWindow.getBufferWidth() /
 					  mainWindow.getBufferHeight(),
@@ -219,9 +229,16 @@ int main(int argc, char *argv[])
     uniformAmbientIntensity = shaderList[0].getAmbientIntensityLocation();
     uniformDirection = shaderList[0].getDirectionLocation();
     uniformDiffuseIntensity = shaderList[0].getDiffuseIntensityLocation();
+    uniformEyePosition = shaderList[0].getEyePosition();
+    uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
+    uniformShininess = shaderList[0].getShininessLocation();
 
     mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
 		       uniformDiffuseIntensity, uniformDirection);
+    
+    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
+    glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
     
     glm::mat4 model(1.0);
 
@@ -229,35 +246,38 @@ int main(int argc, char *argv[])
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-    glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
     brickTexture.useTexture();
-    // meshList[0]->renderMesh();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    meshList[0]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
     clayTexture.useTexture();
-    // meshList[1]->renderMesh();
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    meshList[1]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     meshList[2]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(2.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[3]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(6.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     clayTexture.useTexture();
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[4]->renderMesh();
     
     glUseProgram(0);
