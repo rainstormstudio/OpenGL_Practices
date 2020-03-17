@@ -65,7 +65,7 @@ glm::mat4 Camera::calculateView() {
 }
 
 glm::vec3 Camera::getCameraPosition() {
-  
+  return position;
 }
 
 void Camera::update() {
