@@ -89,9 +89,9 @@ void createObjects() {
   };
   GLfloat vertices[] = {
 			// x     y     z        u     v       nx    ny    nz
-			-1.0f, -1.0f, 0.0f,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			-1.0f, -1.0f, -0.6f,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
 			0.0f, -1.0f, 1.0f,     0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 
-			1.0f, -1.0f, 0.0f,     1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			1.0f, -1.0f, -0.6f,     1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
 			0.0f, 1.0f, 0.0f,      0.5f, 1.0f,   0.0f, 0.0f, 0.0f
   };
   calcAverageNormals(indices, 12, vertices, 32, 8, 5);
@@ -244,20 +244,20 @@ int main(int argc, char *argv[])
 
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    meshList[0]->renderMesh();
+    // meshList[0]->renderMesh();
 
     model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, 1.0f, -2.5f));
+    model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
     clayTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    meshList[1]->renderMesh();
+    // meshList[1]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
     meshList[3]->renderMesh();
 
     model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(6.0f, 0.0f, -10.0f));
+    model = glm::translate(model, glm::vec3(6.0f, 0.0f, -2.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     clayTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
