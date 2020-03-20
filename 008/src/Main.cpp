@@ -32,6 +32,7 @@ Camera camera;
 Texture brickTexture;
 Texture steelTexture;
 Texture concreteTexture;
+Texture floorTexture;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -202,8 +203,10 @@ int main(int argc, char *argv[])
   steelTexture.loadTexture();
   concreteTexture = Texture("textures/clay-pixel.png");
   concreteTexture.loadTexture();
+  floorTexture = Texture("textures/floor.png");
+  floorTexture.loadTexture();
 
-  shinyMaterial = Material(1.0f, 32);
+  shinyMaterial = Material(4.0f, 256);
   dullMaterial = Material(0.3f, 4);
 
 
@@ -247,7 +250,7 @@ int main(int argc, char *argv[])
     camera.mouseControl(mainWindow.getXchange(), mainWindow.getYchange());
 
     // clear window
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     shaderList[0].useShader();
@@ -270,11 +273,9 @@ int main(int argc, char *argv[])
     glm::mat4 model(1.0);
     
     model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
-    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    floorTexture.useTexture();
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     meshList[0]->renderMesh();
     
     model = glm::mat4(1.0);
