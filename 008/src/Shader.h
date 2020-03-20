@@ -23,7 +23,7 @@ public:
   GLuint getProjectionLocation();
   GLuint getModelLocation();
   GLuint getViewLocation();
-  GLuint getEyePosition();
+  GLuint getEyePositionLocation();
   GLuint getAmbientIntensityLocation();
   GLuint getAmbientColorLocation();
   GLuint getDiffuseIntensityLocation();

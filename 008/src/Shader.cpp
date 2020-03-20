@@ -92,7 +92,7 @@ void Shader::compileShader(const char *vertexCode, const char *fragmentCode) {
     snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.ambientIntensity", static_cast<int>(i));
     uniformPointLight[i].uniformAmbientIntensity = glGetUniformLocation(shaderID, locBuff);
 
-    snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.diffuseintensity", static_cast<int>(i));
+    snprintf(locBuff, sizeof(locBuff), "pointLights[%d].base.diffuseIntensity", static_cast<int>(i));
     uniformPointLight[i].uniformDiffuseIntensity = glGetUniformLocation(shaderID, locBuff);
     
     snprintf(locBuff, sizeof(locBuff), "pointLights[%d].position", static_cast<int>(i));
@@ -147,7 +147,7 @@ GLuint Shader::getViewLocation() {
   return uniformView;
 }
 
-GLuint Shader::getEyePosition() {
+GLuint Shader::getEyePositionLocation() {
   return uniformEyePosition;
 }
 

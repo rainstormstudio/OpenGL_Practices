@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 
   camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
-  brickTexture = Texture("textures/brick-pixel.png");
+  brickTexture = Texture("textures/brick.png");
   brickTexture.loadTexture();
   steelTexture = Texture("textures/steel.png");
   steelTexture.loadTexture();
@@ -209,11 +209,11 @@ int main(int argc, char *argv[])
   shinyMaterial = Material(4.0f, 256);
   dullMaterial = Material(0.3f, 4);
 
-
+  
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
   			       0.1f, 0.3f,
   			       2.0f, -1.0f, -2.0f);
-
+  
   unsigned int pointLightCount = 0;
   pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
 			      0.1f, 0.4f,
@@ -257,7 +257,7 @@ int main(int argc, char *argv[])
     uniformModel = shaderList[0].getModelLocation();
     uniformProjection = shaderList[0].getProjectionLocation();
     uniformView = shaderList[0].getViewLocation();
-    uniformEyePosition = shaderList[0].getEyePosition();
+    uniformEyePosition = shaderList[0].getEyePositionLocation();
     uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
     uniformShininess = shaderList[0].getShininessLocation();
 
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
     
     model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    floorTexture.useTexture();
+    brickTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     meshList[0]->renderMesh();
     
