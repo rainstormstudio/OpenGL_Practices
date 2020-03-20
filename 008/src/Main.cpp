@@ -189,9 +189,10 @@ int main(int argc, char *argv[])
   shinyMaterial = Material(1.0f, 32);
   dullMaterial = Material(0.3f, 4);
 
+
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-			       0.1f, 0.3f,
-			       2.0f, -1.0f, -2.0f);
+  			       0.1f, 0.3f,
+  			       2.0f, -1.0f, -2.0f);
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
@@ -235,8 +236,9 @@ int main(int argc, char *argv[])
     uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
     uniformShininess = shaderList[0].getShininessLocation();
 
-    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
-		       uniformDiffuseIntensity, uniformDirection);
+    shaderList[0].setDirectionalLight(&mainLight);
+    //    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
+    //		       uniformDiffuseIntensity, uniformDirection);
     
     glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
