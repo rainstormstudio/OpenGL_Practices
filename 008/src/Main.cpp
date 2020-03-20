@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
   steelTexture.loadTexture();
   concreteTexture = Texture("textures/clay-pixel.png");
   concreteTexture.loadTexture();
-  floorTexture = Texture("textures/floor.png");
+  floorTexture = Texture("textures/plain.png");
   floorTexture.loadTexture();
 
   shinyMaterial = Material(4.0f, 256);
@@ -274,7 +274,7 @@ int main(int argc, char *argv[])
     
     model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
+    floorTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     meshList[0]->renderMesh();
     
@@ -313,7 +313,7 @@ int main(int argc, char *argv[])
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    concreteTexture.useTexture();
+    steelTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[5]->renderMesh();
     
