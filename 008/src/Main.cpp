@@ -198,10 +198,6 @@ int main(int argc, char *argv[])
   GLuint uniformModel = 0;
   GLuint uniformView = 0;
   GLuint uniformEyePosition = 0;
-  GLuint uniformAmbientIntensity = 0;
-  GLuint uniformAmbientColor = 0;
-  GLuint uniformDirection = 0;
-  GLuint uniformDiffuseIntensity = 0;
   GLuint uniformSpecularIntensity = 0;
   GLuint uniformShininess = 0;
   glm::mat4 projection = glm::perspective(45.0f,
@@ -228,10 +224,6 @@ int main(int argc, char *argv[])
     uniformModel = shaderList[0].getModelLocation();
     uniformProjection = shaderList[0].getProjectionLocation();
     uniformView = shaderList[0].getViewLocation();
-    uniformAmbientColor = shaderList[0].getAmbientColorLocation();
-    uniformAmbientIntensity = shaderList[0].getAmbientIntensityLocation();
-    uniformDirection = shaderList[0].getDirectionLocation();
-    uniformDiffuseIntensity = shaderList[0].getDiffuseIntensityLocation();
     uniformEyePosition = shaderList[0].getEyePosition();
     uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
     uniformShininess = shaderList[0].getShininessLocation();
