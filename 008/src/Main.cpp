@@ -20,6 +20,7 @@
 #include "DirectionalLight.h"
 #include "Material.h"
 
+// Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
 
 Window mainWindow;
@@ -235,7 +236,7 @@ int main(int argc, char *argv[])
     uniformEyePosition = shaderList[0].getEyePosition();
     uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
     uniformShininess = shaderList[0].getShininessLocation();
-   
+
     mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
 		       uniformDiffuseIntensity, uniformDirection);
     
