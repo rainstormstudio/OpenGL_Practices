@@ -29,10 +29,8 @@ std::vector<Shader> shaderList;
 Camera camera;
 
 Texture brickTexture;
-Texture clayTexture;
-Texture roofTexture;
-Texture concreteTexture;
 Texture steelTexture;
+Texture concreteTexture;
 
 Material shinyMaterial;
 Material dullMaterial;
@@ -181,19 +179,19 @@ int main(int argc, char *argv[])
 
   camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
-  brickTexture = Texture("textures/brick.png");
+  brickTexture = Texture("textures/brick-pixel.png");
   brickTexture.loadTexture();
-  clayTexture = Texture("textures/clay.png");
-  clayTexture.loadTexture();
   steelTexture = Texture("textures/steel.png");
   steelTexture.loadTexture();
+  concreteTexture = Texture("textures/clay-pixel.png");
+  concreteTexture.loadTexture();
 
   shinyMaterial = Material(1.0f, 32);
   dullMaterial = Material(0.3f, 4);
 
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
 			       0.1f, 0.3f,
-			       0.0f, 0.0f, -1.0f);
+			       2.0f, -1.0f, -2.0f);
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
@@ -259,7 +257,7 @@ int main(int argc, char *argv[])
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
-    clayTexture.useTexture();
+    concreteTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     // meshList[1]->renderMesh();
 
@@ -280,7 +278,7 @@ int main(int argc, char *argv[])
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(6.0f, 0.0f, -2.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    steelTexture.useTexture();
+    concreteTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[4]->renderMesh();
     
