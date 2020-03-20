@@ -82,6 +82,17 @@ void calcAverageNormals(unsigned int *indices, unsigned int indiceCount, GLfloat
 }
 
 void createObjects() {
+  unsigned int floorIndices[] = {
+				 0, 2, 1,
+				 1, 2, 3
+  };
+  GLfloat floorVertices[] = {
+			     -10.0f, 0.0f, -10.0f,   0.0f, 0.0f,    0.0f, -1.0f, 0.0f,
+			     10.0f, 0.0f, -10.0f,    10.0f, 0.0f,   0.0f, -1.0f, 0.0f,
+			     -10.0f, 0.0f, 10.0f,    0.0f, 10.0f,   0.0f, -1.0f, 0.0f,
+			     10.0f, 0.0f, 10.0f,     10.0f, 10.0f,  0.0f, -1.0f, 0.0f
+  };
+  
   unsigned int indices[] = {
 			    0, 3, 1,
 			    1, 3, 2,
@@ -91,9 +102,9 @@ void createObjects() {
   GLfloat vertices[] = {
 			// x     y     z        u     v       nx    ny    nz
 			-1.0f, -1.0f, -0.6f,    0.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
-			0.0f, -1.0f, 1.0f,     0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 
+			0.0f, -1.0f, 1.0f,      0.5f, 0.0f,   0.0f, 0.0f, 0.0f, 
 			1.0f, -1.0f, -0.6f,     1.0f, 0.0f,   0.0f, 0.0f, 0.0f, 
-			0.0f, 1.0f, 0.0f,      0.5f, 1.0f,   0.0f, 0.0f, 0.0f
+			0.0f, 1.0f, 0.0f,       0.5f, 1.0f,   0.0f, 0.0f, 0.0f
   };
   calcAverageNormals(indices, 12, vertices, 32, 8, 5);
   
@@ -143,6 +154,10 @@ void createObjects() {
   };
   calcAverageNormals(cubeIndices, 36, cubeVertices, 192, 8, 5);
 
+  Mesh *obj0 = new Mesh();
+  obj0->createMesh(floorVertices, floorIndices, 32, 6);
+  meshList.push_back(obj0);
+  
   Mesh *obj1 = new Mesh();
   obj1->createMesh(vertices, indices, 32, 12);
   meshList.push_back(obj1);
@@ -197,9 +212,15 @@ int main(int argc, char *argv[])
   			       2.0f, -1.0f, -2.0f);
 
   unsigned int pointLightCount = 0;
-  pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
+  pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
+			      0.1f, 0.4f,
+			      4.0f, 0.0f, 0.0f,
+			      0.3f, 0.2f, 0.1f);
+  pointLightCount ++;
+  
+  pointLights[1] = PointLight(0.0f, 1.0f, 0.0f,
 			      0.1f, 1.0f,
-			      -4.0f, 0.0f, 0.0f,
+			      -4.0f, 2.0f, 0.0f,
 			      0.3f, 0.2f, 0.1f);
   pointLightCount ++;
   
@@ -247,14 +268,23 @@ int main(int argc, char *argv[])
     glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
     
     glm::mat4 model(1.0);
-
+    
+    model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    meshList[0]->renderMesh();
+    
+    model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
     // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    // meshList[0]->renderMesh();
+    // meshList[1]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
@@ -263,28 +293,28 @@ int main(int argc, char *argv[])
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
     concreteTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    // meshList[1]->renderMesh();
+    // meshList[2]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    meshList[2]->renderMesh();
+    meshList[3]->renderMesh();
 
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(2.0f, 0.0f, -10.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[3]->renderMesh();
+    meshList[4]->renderMesh();
 
     model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(6.0f, 0.0f, -2.0f));
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     concreteTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[4]->renderMesh();
+    meshList[5]->renderMesh();
     
     glUseProgram(0);
 
