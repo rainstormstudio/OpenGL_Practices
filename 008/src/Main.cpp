@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "DirectionalLight.h"
+#include "PointLight.h"
 #include "Material.h"
 
 // Window dimensions
@@ -36,6 +37,7 @@ Material shinyMaterial;
 Material dullMaterial;
 
 DirectionalLight mainLight;
+PointLight pointLights[MAX_POINT_LIGHTS];
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -193,6 +195,13 @@ int main(int argc, char *argv[])
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
   			       0.1f, 0.3f,
   			       2.0f, -1.0f, -2.0f);
+
+  unsigned int pointLightCount = 0;
+  pointLights[0] = PointLight(0.0f, 1.0f, 0.0f,
+			      0.1f, 1.0f,
+			      -4.0f, 0.0f, 0.0f,
+			      0.3f, 0.2f, 0.1f);
+  pointLightCount ++;
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
@@ -229,6 +238,7 @@ int main(int argc, char *argv[])
     uniformShininess = shaderList[0].getShininessLocation();
 
     shaderList[0].setDirectionalLight(&mainLight);
+    shaderList[0].setPointLights(pointLights, pointLightCount);
     //    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
     //		       uniformDiffuseIntensity, uniformDirection);
     
