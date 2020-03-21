@@ -242,6 +242,7 @@ int main(int argc, char *argv[])
   while (!mainWindow.getShouldClose()) {
     GLfloat currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
     
     // Get and handle user input events
     glfwPollEvents();
@@ -319,11 +320,7 @@ int main(int argc, char *argv[])
     
     glUseProgram(0);
 
-    if (currentTime - lastFrameTime >= 1.0f / FPS) {
-      mainWindow.swapBuffers();
-      lastFrameTime = currentTime;
-    }
-    lastTime = currentTime;
+    mainWindow.swapBuffers();
   }
   
   return 0;
