@@ -19,6 +19,7 @@
 #include "Texture.h"
 #include "DirectionalLight.h"
 #include "PointLight.h"
+#include "SpotLight.h"
 #include "Material.h"
 
 // Window dimensions
@@ -39,6 +40,7 @@ Material dullMaterial;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
+SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -226,6 +228,15 @@ int main(int argc, char *argv[])
 			      -4.0f, 2.0f, 0.0f,
 			      0.3f, 0.2f, 0.1f);
   pointLightCount ++;
+
+  unsigned int spotLightCount = 0;
+  spotLights[0] = SpotLight(0.0f, 0.0f, 1.0f,
+			    0.0f, 1.0f,
+			    0.0f, 0.0f, 0.0f,
+			    0.0f, -1.0f, 0.0f,
+			    0.3f, 0.2f, 0.1f,
+			    20.0f);
+  spotLightCount ++;
   
   GLuint uniformProjection = 0;
   GLuint uniformModel = 0;
@@ -264,6 +275,7 @@ int main(int argc, char *argv[])
 
     shaderList[0].setDirectionalLight(&mainLight);
     shaderList[0].setPointLights(pointLights, pointLightCount);
+    shaderList[0].setSpotLights(spotLights, spotLightCount);
     //    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
     //		       uniformDiffuseIntensity, uniformDirection);
     
