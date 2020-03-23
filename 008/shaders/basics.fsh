@@ -93,7 +93,7 @@ vec4 calcSpotLight(SpotLight sLight) {
 
   if (sLightFactor > sLight.edge) {
     vec4 color = calcPointLight(sLight.base);
-    return color;
+    return color * (1.0f  - (1.0f - sLightFactor) * (1.0f / (1.0f - sLight.edge)));
   } else {
     return vec4(0, 0, 0, 0);
   }
