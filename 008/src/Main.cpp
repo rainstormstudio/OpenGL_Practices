@@ -90,10 +90,10 @@ void createObjects() {
 				 1, 2, 3
   };
   GLfloat floorVertices[] = {
-			     -10.0f, 0.0f, -10.0f,   0.0f, 0.0f,    0.0f, -1.0f, 0.0f,
-			     10.0f, 0.0f, -10.0f,    10.0f, 0.0f,   0.0f, -1.0f, 0.0f,
-			     -10.0f, 0.0f, 10.0f,    0.0f, 10.0f,   0.0f, -1.0f, 0.0f,
-			     10.0f, 0.0f, 10.0f,     10.0f, 10.0f,  0.0f, -1.0f, 0.0f
+			     -20.0f, 0.0f, -20.0f,   0.0f, 0.0f,    0.0f, -1.0f, 0.0f,
+			     20.0f, 0.0f, -20.0f,    20.0f, 0.0f,   0.0f, -1.0f, 0.0f,
+			     -20.0f, 0.0f, 20.0f,    0.0f, 20.0f,   0.0f, -1.0f, 0.0f,
+			     20.0f, 0.0f, 20.0f,     20.0f, 20.0f,  0.0f, -1.0f, 0.0f
   };
   
   unsigned int indices[] = {
@@ -181,6 +181,17 @@ void createObjects() {
   cube3->createMesh(cubeVertices, cubeIndices, 192, 36);
   meshList.push_back(cube3);
   
+  Mesh *cube4 = new Mesh();
+  cube4->createMesh(cubeVertices, cubeIndices, 192, 36);
+  meshList.push_back(cube4);
+  
+  Mesh *cube5 = new Mesh();
+  cube5->createMesh(cubeVertices, cubeIndices, 192, 36);
+  meshList.push_back(cube5);
+  
+  Mesh *cube6 = new Mesh();
+  cube6->createMesh(cubeVertices, cubeIndices, 192, 36);
+  meshList.push_back(cube6);
 }
 
 void createShaders() {
@@ -213,7 +224,7 @@ int main(int argc, char *argv[])
 
   
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-  			       0.1f, 0.3f,
+  			       0.0f, 0.0f,
   			       2.0f, -1.0f, -2.0f);
   
   unsigned int pointLightCount = 0;
@@ -231,7 +242,7 @@ int main(int argc, char *argv[])
 
   unsigned int spotLightCount = 0;
   spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
-			    0.0f, 1.0f,
+			    0.0f, 2.0f,
 			    0.0f, 0.0f, 0.0f,
 			    0.0f, -1.0f, 0.0f,
 			    0.3f, 0.2f, 0.1f,
@@ -273,6 +284,10 @@ int main(int argc, char *argv[])
     uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
     uniformShininess = shaderList[0].getShininessLocation();
 
+    glm::vec3 lowerLight = camera.getCameraPosition();
+    lowerLight.y -= 0.3f;
+    spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
+    
     shaderList[0].setDirectionalLight(&mainLight);
     shaderList[0].setPointLights(pointLights, pointLightCount);
     shaderList[0].setSpotLights(spotLights, spotLightCount);
@@ -285,7 +300,7 @@ int main(int argc, char *argv[])
     
     glm::mat4 model(1.0);
     
-    model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     floorTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
@@ -329,6 +344,27 @@ int main(int argc, char *argv[])
     steelTexture.useTexture();
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[5]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -8.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[6]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -6.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[7]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -4.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[8]->renderMesh();
     
     glUseProgram(0);
 
