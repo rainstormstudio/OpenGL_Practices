@@ -40,6 +40,7 @@ Material shinyMaterial;
 Material dullMaterial;
 
 Model tie_fighter;
+Model x_wing;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
@@ -227,9 +228,11 @@ int main(int argc, char *argv[])
 
   tie_fighter = Model();
   tie_fighter.loadModel("models/TIE-fighter.obj");
+  x_wing = Model();
+  x_wing.loadModel("models/x-wing.obj");
   
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-  			       0.01f, 0.01f,
+  			       0.2f, 0.2f,
   			       2.0f, -1.0f, -2.0f);
   
   unsigned int pointLightCount = 0;
@@ -372,11 +375,11 @@ int main(int argc, char *argv[])
     meshList[8]->renderMesh();
 
     model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(-30.0f, 20.0f, 80.0f));
-    model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+    model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
+    model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    tie_fighter.renderModel();
+    x_wing.renderModel();
 
     glUseProgram(0);
 

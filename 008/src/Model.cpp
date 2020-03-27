@@ -77,11 +77,10 @@ void Model::loadMaterials(const aiScene *scene) {
 	int idx = std::string(path.data).rfind("\\");
 	std::string filename = std::string(path.data).substr(idx + 1);
 	std::string texPath = std::string("textures/") + filename;
-	printf("texture path: %s\n", texPath.c_str());
 	textureList[i] = new Texture(texPath.c_str());
 	
 	if (!textureList[i]->loadTexture()) {
-	  printf("failed to load texture at: %s\n", texPath.c_str());
+	  printf("failed to load texture at: \"%s\"\n", texPath.c_str());
 	  delete textureList[i];
 	  textureList[i] = nullptr;
 	}
