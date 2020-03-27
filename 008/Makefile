@@ -5,7 +5,8 @@ build:
 	-lglfw \
 	-lGL \
 	-lGLU \
-	-lGLEW;
+	-lGLEW \
+	-lassimp;
 
 test:
 	g++ -w -std=c++14 -Wfatal-errors \

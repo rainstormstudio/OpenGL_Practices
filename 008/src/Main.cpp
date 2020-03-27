@@ -39,7 +39,7 @@ Texture floorTexture;
 Material shinyMaterial;
 Material dullMaterial;
 
-Model bugatti;
+Model tie_fighter;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
@@ -225,11 +225,11 @@ int main(int argc, char *argv[])
   shinyMaterial = Material(4.0f, 256);
   dullMaterial = Material(0.3f, 4);
 
-  bugatti = Model();
-  bugatti.loadModel("models/bugatti.obj");
+  tie_fighter = Model();
+  tie_fighter.loadModel("models/TIE-fighter.obj");
   
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
-  			       0.0f, 0.0f,
+  			       0.01f, 0.01f,
   			       2.0f, -1.0f, -2.0f);
   
   unsigned int pointLightCount = 0;
@@ -372,10 +372,12 @@ int main(int argc, char *argv[])
     meshList[8]->renderMesh();
 
     model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, -5.0f, -2.0f));
+    model = glm::translate(model, glm::vec3(-30.0f, 20.0f, 80.0f));
+    model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    bugatti.renderModel();
-    
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    tie_fighter.renderModel();
+
     glUseProgram(0);
 
     mainWindow.swapBuffers();

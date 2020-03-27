@@ -51,7 +51,7 @@ void Model::loadMesh(aiMesh *mesh, const aiScene *scene) {
     } else {
       vertices.insert(vertices.end(), {0.0f, 0.0f});
     }
-    vertices.insert(vertices.end(), {mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z
+    vertices.insert(vertices.end(), {-mesh->mNormals[i].x, -mesh->mNormals[i].y, -mesh->mNormals[i].z
       });
   }
   for (size_t i = 0; i < mesh->mNumFaces; i ++) {
@@ -77,6 +77,7 @@ void Model::loadMaterials(const aiScene *scene) {
 	int idx = std::string(path.data).rfind("\\");
 	std::string filename = std::string(path.data).substr(idx + 1);
 	std::string texPath = std::string("textures/") + filename;
+	printf("texture path: %s\n", texPath.c_str());
 	textureList[i] = new Texture(texPath.c_str());
 	
 	if (!textureList[i]->loadTexture()) {
