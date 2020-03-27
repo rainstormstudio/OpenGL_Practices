@@ -14,7 +14,8 @@ test:
 	-lglfw \
 	-lGL \
 	-lGLU \
-	-lGLEW;
+	-lGLEW \
+	-lassimp;
 	./game;
 
 clean:

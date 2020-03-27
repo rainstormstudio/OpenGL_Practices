@@ -21,6 +21,7 @@
 #include "PointLight.h"
 #include "SpotLight.h"
 #include "Material.h"
+#include "Model.h"
 
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
@@ -37,6 +38,8 @@ Texture floorTexture;
 
 Material shinyMaterial;
 Material dullMaterial;
+
+Model bugatti;
 
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
@@ -211,17 +214,19 @@ int main(int argc, char *argv[])
   camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
 
   brickTexture = Texture("textures/brick.png");
-  brickTexture.loadTexture();
+  brickTexture.loadTextureAlpha();
   steelTexture = Texture("textures/steel.png");
-  steelTexture.loadTexture();
+  steelTexture.loadTextureAlpha();
   concreteTexture = Texture("textures/clay-pixel.png");
-  concreteTexture.loadTexture();
+  concreteTexture.loadTextureAlpha();
   floorTexture = Texture("textures/floor.png");
-  floorTexture.loadTexture();
+  floorTexture.loadTextureAlpha();
 
   shinyMaterial = Material(4.0f, 256);
   dullMaterial = Material(0.3f, 4);
 
+  bugatti = Model();
+  bugatti.loadModel("models/bugatti.obj");
   
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
   			       0.0f, 0.0f,
@@ -259,7 +264,7 @@ int main(int argc, char *argv[])
 					  mainWindow.getBufferWidth() /
 					  mainWindow.getBufferHeight(),
 					  0.1f, 100.0f);
-
+  
   // loop until window closed
   while (!mainWindow.getShouldClose()) {
     GLfloat currentTime = glfwGetTime();
@@ -365,6 +370,11 @@ int main(int argc, char *argv[])
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[8]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, -5.0f, -2.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    bugatti.renderModel();
     
     glUseProgram(0);
 
