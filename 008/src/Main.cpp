@@ -22,11 +22,13 @@
 #include "SpotLight.h"
 #include "Material.h"
 #include "Model.h"
+//#include "Timer.h"
 
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
 
 Window mainWindow;
+//Timer *timer;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 Camera camera;
@@ -208,6 +210,7 @@ int main(int argc, char *argv[])
 {
   mainWindow = Window(SCREEN_WIDTH, SCREEN_HEIGHT);
   mainWindow.initialize();
+  //timer = new Timer();
 
   createObjects();
   createShaders();
@@ -273,6 +276,8 @@ int main(int argc, char *argv[])
     GLfloat currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
+    //timer->update();
+    //timer->frameControl();
     
     // Get and handle user input events
     glfwPollEvents();
