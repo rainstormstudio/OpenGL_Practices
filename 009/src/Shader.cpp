@@ -141,6 +141,9 @@ void Shader::compileShader(const char *vertexCode, const char *fragmentCode) {
     snprintf(locBuff, sizeof(locBuff), "spotLights[%d].edge", static_cast<int>(i));
     uniformSpotLight[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
   }
+
+  uniformTexture = glGetUniformLocation(shaderID, "theTexture");
+  uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
 }
 
 void Shader::addShader(GLuint theProgram, const char *shaderCode, GLenum shaderType) {
