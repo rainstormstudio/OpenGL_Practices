@@ -22,13 +22,13 @@
 #include "SpotLight.h"
 #include "Material.h"
 #include "Model.h"
-//#include "Timer.h"
+#include "Timer.h"
 
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
 
 Window mainWindow;
-//Timer *timer;
+Timer *timer;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
 Camera camera;
@@ -210,12 +210,12 @@ int main(int argc, char *argv[])
 {
   mainWindow = Window(SCREEN_WIDTH, SCREEN_HEIGHT);
   mainWindow.initialize();
-  //timer = new Timer();
+  timer = new Timer();
 
   createObjects();
   createShaders();
 
-  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.1f);
+  camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 5.0f, 0.3f);
 
   brickTexture = Texture("textures/brick.png");
   brickTexture.loadTextureAlpha();
@@ -232,7 +232,7 @@ int main(int argc, char *argv[])
   tie_fighter = Model();
   tie_fighter.loadModel("models/TIE-fighter.obj");
   x_wing = Model();
-  x_wing.loadModel("models/x-wing.obj");
+  //  x_wing.loadModel("models/x-wing.obj");
   
   mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
   			       0.2f, 0.2f,
@@ -276,8 +276,8 @@ int main(int argc, char *argv[])
     GLfloat currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
-    //timer->update();
-    //timer->frameControl();
+    timer->update();
+    timer->frameControl();
     
     // Get and handle user input events
     glfwPollEvents();
@@ -378,13 +378,14 @@ int main(int argc, char *argv[])
     brickTexture.useTexture();
     dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
     meshList[8]->renderMesh();
-
+    /*
     model = glm::mat4(1.0);
     model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
     model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
     glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
     shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
     x_wing.renderModel();
+    */
 
     glUseProgram(0);
 
