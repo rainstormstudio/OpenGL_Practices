@@ -7,7 +7,7 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/mat4x4.hpp>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -27,10 +27,19 @@
 // Window dimensions
 const float toRadians = 3.1415926f / 180.0f;
 
+GLuint uniformProjection = 0;
+GLuint uniformModel = 0;
+GLuint uniformView = 0;
+GLuint uniformEyePosition = 0;
+GLuint uniformSpecularIntensity = 0;
+GLuint uniformShininess = 0;
+
 Window mainWindow;
 Timer *timer;
 std::vector<Mesh*> meshList;
 std::vector<Shader> shaderList;
+Shader directionalShadowShader;
+
 Camera camera;
 
 Texture brickTexture;
@@ -47,6 +56,9 @@ Model x_wing;
 DirectionalLight mainLight;
 PointLight pointLights[MAX_POINT_LIGHTS];
 SpotLight spotLights[MAX_SPOT_LIGHTS];
+
+unsigned int pointLightCount = 0;
+unsigned int spotLightCount = 0;
 
 GLfloat deltaTime = 0.0f;
 GLfloat lastTime = 0.0f;
@@ -204,6 +216,144 @@ void createShaders() {
   Shader *shader1 = new Shader();
   shader1->createFromFiles(vShader, fShader);
   shaderList.push_back(*shader1);
+
+  directionalShadowShader = Shader();
+  directionalShadowShader.createFromFiles("shaders/directional_shadow_map.vsh", "shaders/directional_shadow_map.fsh");
+}
+
+void renderScene() {
+  glm::mat4 model(1.0);
+    
+    model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    floorTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    meshList[0]->renderMesh();
+    
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
+    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    // meshList[1]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
+    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
+    concreteTexture.useTexture();
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    // meshList[2]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, 4.0f, -10.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    meshList[3]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(2.0f, 4.0f, -10.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[4]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    steelTexture.useTexture();
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[5]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 4.0f, -8.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[6]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 4.0f, -6.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[7]->renderMesh();
+
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(4.0f, 4.0f, -4.0f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    brickTexture.useTexture();
+    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
+    meshList[8]->renderMesh();
+    /*
+    model = glm::mat4(1.0);
+    model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
+    model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
+    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
+    x_wing.renderModel();
+    */
+}
+
+void directionalShaderMapPass(DirectionalLight* light) {
+  directionalShadowShader.useShader();
+  
+  glViewport(0, 0, light->getShadowMap()->getShadowWidth(),
+	     light->getShadowMap()->getShadowHeight());
+  
+  light->getShadowMap()->write();
+  glClear(GL_DEPTH_BUFFER_BIT);
+  
+  uniformModel = directionalShadowShader.getModelLocation();
+  glm::mat4 temp = light->calculateLightTransform();
+  directionalShadowShader.setDirectionalLightTransform(&temp);
+
+  renderScene();
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void renderPass(glm::mat4 projectionMatrix, glm::mat4 viewMatrix) {
+  shaderList[0].useShader();
+  
+  uniformModel = shaderList[0].getModelLocation();
+  uniformProjection = shaderList[0].getProjectionLocation();
+  uniformView = shaderList[0].getViewLocation();
+  uniformEyePosition = shaderList[0].getEyePositionLocation();
+  uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
+  uniformShininess = shaderList[0].getShininessLocation();
+
+  glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+  
+  // clear window
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+  glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+  glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+    
+  shaderList[0].setDirectionalLight(&mainLight);
+  shaderList[0].setPointLights(pointLights, pointLightCount);
+  shaderList[0].setSpotLights(spotLights, spotLightCount);
+  glm::mat4 temp = mainLight.calculateLightTransform();
+  shaderList[0].setDirectionalLightTransform(&temp);
+  //    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
+  //		       uniformDiffuseIntensity, uniformDirection);
+
+  mainLight.getShadowMap()->read(GL_TEXTURE1);
+  shaderList[0].setTexture(0);
+  shaderList[0].setDirectionalShadowMap(1);
+  
+  glm::vec3 lowerLight = camera.getCameraPosition();
+  lowerLight.y -= 0.3f;
+  //  spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
+
+  renderScene();
 }
 
 int main(int argc, char *argv[])
@@ -234,11 +384,11 @@ int main(int argc, char *argv[])
   x_wing = Model();
   //  x_wing.loadModel("models/x-wing.obj");
   
-  mainLight = DirectionalLight(1.0f, 1.0f, 1.0f,
+  mainLight = DirectionalLight(1024, 1024, 
+			       1.0f, 1.0f, 1.0f,
   			       0.2f, 0.2f,
-  			       2.0f, -1.0f, -2.0f);
+  			       0.0f, -7.0f, -1.0f);
   
-  unsigned int pointLightCount = 0;
   pointLights[0] = PointLight(0.0f, 0.0f, 1.0f,
 			      0.1f, 0.4f,
 			      4.0f, 0.0f, 0.0f,
@@ -251,7 +401,6 @@ int main(int argc, char *argv[])
 			      0.3f, 0.2f, 0.1f);
   pointLightCount ++;
 
-  unsigned int spotLightCount = 0;
   spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
 			    0.0f, 2.0f,
 			    0.0f, 0.0f, 0.0f,
@@ -260,12 +409,6 @@ int main(int argc, char *argv[])
 			    20.0f);
   spotLightCount ++;
   
-  GLuint uniformProjection = 0;
-  GLuint uniformModel = 0;
-  GLuint uniformView = 0;
-  GLuint uniformEyePosition = 0;
-  GLuint uniformSpecularIntensity = 0;
-  GLuint uniformShininess = 0;
   glm::mat4 projection = glm::perspective(45.0f,
 					  mainWindow.getBufferWidth() /
 					  mainWindow.getBufferHeight(),
@@ -276,8 +419,6 @@ int main(int argc, char *argv[])
     GLfloat currentTime = glfwGetTime();
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
-    timer->update();
-    timer->frameControl();
     
     // Get and handle user input events
     glfwPollEvents();
@@ -285,107 +426,8 @@ int main(int argc, char *argv[])
     camera.keyControl(mainWindow.getKeys(), deltaTime);
     camera.mouseControl(mainWindow.getXchange(), mainWindow.getYchange());
 
-    // clear window
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    shaderList[0].useShader();
-    uniformModel = shaderList[0].getModelLocation();
-    uniformProjection = shaderList[0].getProjectionLocation();
-    uniformView = shaderList[0].getViewLocation();
-    uniformEyePosition = shaderList[0].getEyePositionLocation();
-    uniformSpecularIntensity = shaderList[0].getSpecularIntensityLocation();
-    uniformShininess = shaderList[0].getShininessLocation();
-
-    glm::vec3 lowerLight = camera.getCameraPosition();
-    lowerLight.y -= 0.3f;
-    spotLights[0].setFlash(lowerLight, camera.getCameraDirection());
-    
-    shaderList[0].setDirectionalLight(&mainLight);
-    shaderList[0].setPointLights(pointLights, pointLightCount);
-    shaderList[0].setSpotLights(spotLights, spotLightCount);
-    //    mainLight.useLight(uniformAmbientIntensity, uniformAmbientColor,
-    //		       uniformDiffuseIntensity, uniformDirection);
-    
-    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
-    glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateView()));
-    glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-    
-    glm::mat4 model(1.0);
-    
-    model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    floorTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    meshList[0]->renderMesh();
-    
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.5f));
-    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    // meshList[1]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f));
-    // model = glm::rotate(model, curAngle * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
-    // model = glm::scale(model, glm::vec3(0.4f, 0.4f, 1.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));    
-    concreteTexture.useTexture();
-    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    // meshList[2]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    meshList[3]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(2.0f, 0.0f, -10.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[4]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    steelTexture.useTexture();
-    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[5]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -8.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[6]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -6.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[7]->renderMesh();
-
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(4.0f, 0.0f, -4.0f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    brickTexture.useTexture();
-    dullMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);    
-    meshList[8]->renderMesh();
-    /*
-    model = glm::mat4(1.0);
-    model = glm::translate(model, glm::vec3(-7.0f, 0.0f, 10.0f));
-    model = glm::scale(model, glm::vec3(0.06f, 0.06f, 0.06f));
-    glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-    shinyMaterial.useMaterial(uniformSpecularIntensity, uniformShininess);
-    x_wing.renderModel();
-    */
+    directionalShaderMapPass(&mainLight);
+    renderPass(projection, camera.calculateView());
 
     glUseProgram(0);
 

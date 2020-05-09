@@ -62,7 +62,16 @@ float calcDirectionalShadowFactor(DirectionalLight light) {
   float closestDepth = texture(directionalShadowMap, projCoords.xy).r;
   float currentDepth = projCoords.z;
 
-  float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+  vec3 temp_normal = normalize(normal);
+  vec3 lightDir = normalize(light.direction);
+
+  float bias = max(0.05 * (1 - dot(temp_normal, lightDir)), 0.005);
+
+  float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+  if (projCoords.z > 1.0) {
+    shadow = 0.0;
+  }
 
   return shadow;
 }
@@ -84,7 +93,7 @@ vec4 calcLightByDirection(Light light, vec3 direction, float shadowFactor) {
       specularColor = vec4(light.color * material.specularIntensity * specularFactor, 1.0f);
     }
   }
-  return (ambientColor + (1.0f - shadow) * (diffuseColor + specularColor));
+  return (ambientColor + (1.0f - shadowFactor) * (diffuseColor + specularColor));
 }
 
 vec4 calcDirectionalLight() {
